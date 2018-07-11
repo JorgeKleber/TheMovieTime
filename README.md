@@ -1,7 +1,7 @@
 # TheMovieTime
 An app that show you the upcoming movies!
 
-Libraries include in this project?
+Libraries included in this project:
 
 ## **NewtonSoft.json**
 
