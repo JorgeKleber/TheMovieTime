@@ -1,6 +1,8 @@
 # TheMovieTime
 An app that show you the upcoming movies!
 
+* Highly recommended to delete the bin and obj folders of each project.
+
 Libraries included in this project:
 
 ## **NewtonSoft.json**
