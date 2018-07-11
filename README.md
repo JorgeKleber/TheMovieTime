@@ -1,14 +1,14 @@
 # TheMovieTime
 An app that show you the upcoming movies!
 
-Lybraries include in this project?
+Libraries include in this project?
 
 ## **NewtonSoft.json**
 
-This lybraries is a JSON framework .NET, it was used to deserialize the json archive returned by TMDb API.
+This libraries is a JSON framework .NET, it was used to deserialize the json archive returned by TMDb API.
 
 ## **Acr.User.Dialog**
-Supported Shared and PCL project, this cross platform lybrarie help to show dialogs for user.
+Supported Shared and PCL project, this cross platform library help to show dialogs for user.
 
 ## **Plugin.CurrentActivity**
 Used only android project, this library return the current activity.
