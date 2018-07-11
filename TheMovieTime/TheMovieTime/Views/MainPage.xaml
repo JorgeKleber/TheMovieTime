@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TheMovieTime.Views.MainPage"
+             xmlns:custom="clr-namespace:TheMovieTime.Custom"
+             xmlns:convert="clr-namespace:TheMovieTime.Converters"
+             xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             Title="{Binding Title}">
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <SearchBar Text="{Binding SearchText}" 
+                       Placeholder="Informe o nome do filme" 
+                       Grid.Row="0">
+                <SearchBar.Behaviors>
+                    <b:EventToCommandBehavior EventName="TextChanged" Command="{Binding TextChanged}"/>
+                </SearchBar.Behaviors>
+            </SearchBar>
+
+            <custom:MyListView ItemsSource="{Binding Results}"
+                           SeparatorVisibility="None"
+                           Grid.Row="1"
+                           RowHeight="150"
+                           HasUnevenRows="False"
+                           IsPullToRefreshEnabled="True"
+                           IsRefreshing="{Binding IsRefresing}"
+                           RefreshCommand="{Binding RefreshCommand}"
+                           ItemTappedCommand="{Binding TappedCommand}" 
+                           ItemAppearingCommand="{Binding InfiniteCommand}">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <custom:MyViewCell SelectedBackgroundColor="Transparent">
+
+                            <Frame CornerRadius="8" Padding="0" HasShadow="True" Margin="10,5,10,5" IsClippedToBounds="true" BackgroundColor="#FFFFFF">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ffimage:CachedImage
+                                                         Aspect="AspectFill"
+                                                         CacheType="Memory"
+                                                         Grid.Column="0"
+                                                         RetryCount="3"
+                                                         LoadingPlaceholder="ic_default.png"
+                                                         ErrorPlaceholder="ic_default.png"
+                                                         DownsampleHeight="0"
+                                                         DownsampleToViewSize="True"
+                                                         FadeAnimationEnabled="True">
+                                        <ffimage:CachedImage.Source>
+                                            <UriImageSource Uri="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                                            CacheValidity="14"
+                                                            CachingEnabled="True"/>
+                                        </ffimage:CachedImage.Source>
+
+                                    </ffimage:CachedImage>
+
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <StackLayout>
+                                            <Label Text="{Binding title}" Grid.Row="0" FontSize="20" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
+                                            <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
+                                        </StackLayout>
+                                        <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}" Grid.Row="1" FontSize="14" LineBreakMode="WordWrap" TextColor="#A8A391" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Margin="5"/>
+                                        <Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>
+                                    </Grid>
+
+
+                                </Grid>
+                            </Frame>
+
+                        </custom:MyViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </custom:MyListView>
+        </Grid>
+
+    </ContentPage.Content>
+
+</ContentPage>

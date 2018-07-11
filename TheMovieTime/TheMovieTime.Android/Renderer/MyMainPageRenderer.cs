@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Runtime;
+using Android.Support.V7.Widget;
+using Android.Text;
+using Android.Views;
+using Android.Views.InputMethods;
+using Plugin.CurrentActivity;
+using TheMovieTime.Custom;
+using TheMovieTime.Droid.Renderer;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
+
+[assembly: ExportRenderer(typeof(MyCustomPage), typeof(MyMainPageRenderer))]
+namespace TheMovieTime.Droid.Renderer
+{
+    public class MyMainPageRenderer : PageRenderer
+    {
+        private SearchView _searchView;
+
+        private Toolbar toolbar;
+
+        private static Toolbar GetToolbar() => (CrossCurrentActivity.Current?.Activity as MainActivity)?.FindViewById<Toolbar>(Resource.Id.action_search);
+
+        public MyMainPageRenderer(Context context) : base(context)
+        {
+            
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Page> e)
+        {
+            base.OnElementChanged(e);
+
+            if (e?.NewElement == null || e.OldElement != null)
+            {
+                return;
+            }
+
+            GetToolbar();
+
+            AddSearchToToolBar();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_searchView != null)
+            {
+                _searchView.QueryTextChange += searchView_QueryTextChange;
+                _searchView.QueryTextSubmit += searchView_QueryTextSubmit;
+            }
+            this.toolbar?.Menu?.RemoveItem(Resource.Menu.mainmenu);
+            base.Dispose(disposing);
+        }
+
+        private void AddSearchToToolBar()
+        {
+            this.toolbar = (CrossCurrentActivity.Current?.Activity as MainActivity)?.FindViewById<Toolbar>(Resource.Id.toolbar);
+
+            if (this.toolbar == null || Element == null)
+            {
+                return;
+            }
+
+            this.toolbar.Title = Element.Title;
+            this.toolbar.InflateMenu(Resource.Menu.mainmenu);
+
+            _searchView = this.toolbar.Menu?.FindItem(Resource.Id.action_search)?.ActionView?.JavaCast<SearchView>();
+
+            if (_searchView == null)
+            {
+                return;
+            }
+
+            _searchView.QueryTextChange += searchView_QueryTextChange;
+            _searchView.QueryTextSubmit += searchView_QueryTextSubmit;
+            _searchView.QueryHint = (Element as MyCustomPage)?.SearchPlaceHolderText;
+            _searchView.ImeOptions = (int)ImeAction.Search;
+            _searchView.InputType = (int)InputTypes.TextVariationNormal;
+            _searchView.MaxWidth = int.MaxValue;        //Hack to go full width - http://stackoverflow.com/questions/31456102/searchview-doesnt-expand-full-width
+        }
+
+        private void searchView_QueryTextSubmit(object sender, SearchView.QueryTextSubmitEventArgs e)
+        {
+            if (e == null)
+            {
+                return;
+            }
+
+            var searchPage = Element as MyCustomPage;
+            if (searchPage == null)
+            {
+                return;
+            }
+            searchPage.SearchText = e.Query;
+            searchPage.SearchCommand?.Execute(e.Query);
+            e.Handled = true;
+        }
+
+        private void searchView_QueryTextChange(object sender, SearchView.QueryTextChangeEventArgs e)
+        {
+            var searchPage = Element as MyCustomPage;
+            if (searchPage == null)
+            {
+                return;
+            }
+            searchPage.SearchText = e?.NewText;
+        }
+
+    }
+}
