@@ -5,6 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:fftrans="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             NavigationPage.HasNavigationBar="False"
              x:Class="TheMovieTime.Views.MovieDetail" Title="{Binding Title}">
 
     <ContentPage.Content>
@@ -16,10 +17,10 @@
             </Grid.RowDefinitions>
 
             <ffimage:CachedImage Source="{Binding Backdrop_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" 
-                                 Aspect="Fill" Grid.Row="0"/>
+                                 Aspect="AspectFill" Grid.Row="0"/>
 
             <ffimage:CachedImage Source="{Binding Poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" 
-                   Aspect="Fill" 
+                   Aspect="AspectFill" 
                    WidthRequest="100"
                    HeightRequest="150"
                    Grid.Column="0"

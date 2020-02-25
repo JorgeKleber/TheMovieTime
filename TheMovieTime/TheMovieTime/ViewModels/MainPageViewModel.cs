@@ -15,9 +15,10 @@ using TheMovieTime.Model;
 
 namespace TheMovieTime.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : BindableBase, INavigatedAware
     {
         private ObservableCollection<Movie> results;
+        private Movie itemSelecionado;
         private List<Movie> resultsAux;
         private string searchText;
         private bool isRefresing;
@@ -31,22 +32,22 @@ namespace TheMovieTime.ViewModels
         public DelegateCommand SearchCommand { get; set; }
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand<string> TextChanged { get; set; }
-        public DelegateCommand<Movie> TappedCommand { get; set; }
+        public DelegateCommand TappedCommand { get; set; }
         public DelegateCommand<Movie> InfiniteCommand { get; set; }
 
         public ObservableCollection<Movie> Results { get => results; set { results = value; RaisePropertyChanged("Results"); } }
         public string SearchText { get => searchText; set { searchText = value; RaisePropertyChanged("SearchText"); } }
         public bool IsRefresing { get => isRefresing; set { isRefresing = value; RaisePropertyChanged("IsRefresing"); } }
+        public Movie ItemSelecionado { get => itemSelecionado; set { itemSelecionado = value; RaisePropertyChanged("ItemSelecionado"); } }
 
         public MainPageViewModel(INavigationService navigationService)
-            : base(navigationService)
         {
-            Title = "Movie Time!";
+            //Title = "Movie Time!";
 
             this.navigationService = navigationService;
             this.resultsAux = new List<Movie>();
 
-            TappedCommand = new DelegateCommand<Movie>(ItemTapped_Event);
+            TappedCommand = new DelegateCommand(ItemTapped_Event);
             InfiniteCommand = new DelegateCommand<Movie>(Infinite_Event);
             RefreshCommand = new DelegateCommand(Refresh_Event);
             TextChanged = new DelegateCommand<string>(TextChanged_Event);
@@ -86,25 +87,6 @@ namespace TheMovieTime.ViewModels
                 isSearch = false;
             }
         }
-
-        //private void Search_Event()
-        //{
-        //    if (!string.IsNullOrEmpty(SearchText))
-        //    {
-        //        var query = Results.Where(r => r.title.ToUpper().Contains(SearchText.ToUpper())).ToList();
-
-        //        resultsAux = Results;
-
-        //        ObservableCollection<Movie> resultQuery = new ObservableCollection<Movie>();
-
-        //        foreach (var item in query)
-        //        {
-        //            resultQuery.Add(item);
-        //        }
-
-        //        Results = resultQuery;
-        //    }
-        //}
 
         private void Infinite_Event(Movie obj)
         {
@@ -169,21 +151,22 @@ namespace TheMovieTime.ViewModels
             }
         }
 
-        private async void ItemTapped_Event(Movie obj)
+        private async void ItemTapped_Event()
         {
-            var item = obj;
-
             var parameter = new NavigationParameters();
 
-            parameter.Add("Result", item);
+            parameter.Add("Result", ItemSelecionado);
 
             await this.navigationService.NavigateAsync("MovieDetail", parameter);
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            base.OnNavigatedTo(parameters);
+            //throw new NotImplementedException();
+        }
 
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
             if (Results == null)
             {
                 LoadList();

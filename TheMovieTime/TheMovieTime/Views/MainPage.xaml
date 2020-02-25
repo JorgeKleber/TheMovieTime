@@ -5,6 +5,7 @@
              xmlns:custom="clr-namespace:TheMovieTime.Custom"
              xmlns:convert="clr-namespace:TheMovieTime.Converters"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             NavigationPage.HasNavigationBar="False"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              Title="{Binding Title}">
 
@@ -23,29 +24,29 @@
                 </SearchBar.Behaviors>
             </SearchBar>
 
-            <custom:MyListView ItemsSource="{Binding Results}"
-                           SeparatorVisibility="None"
-                           Grid.Row="1"
-                           RowHeight="150"
-                           HasUnevenRows="False"
-                           IsPullToRefreshEnabled="True"
-                           IsRefreshing="{Binding IsRefresing}"
-                           RefreshCommand="{Binding RefreshCommand}"
-                           ItemTappedCommand="{Binding TappedCommand}" 
-                           ItemAppearingCommand="{Binding InfiniteCommand}">
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefresing}"
+                         Command="{Binding RefreshCommand}">
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <custom:MyViewCell SelectedBackgroundColor="Transparent">
+                <CollectionView ItemsSource="{Binding Results}"
+                                SelectionMode="Single"
+                                SelectionChangedCommand="{Binding TappedCommand}"
+                                SelectedItem="{Binding ItemSelecionado}">
 
-                            <Frame CornerRadius="8" Padding="0" HasShadow="True" Margin="10,5,10,5" IsClippedToBounds="true" BackgroundColor="#FFFFFF">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2"/>
+                    </CollectionView.ItemsLayout>
 
-                                    <ffimage:CachedImage
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            
+                                <Grid Padding="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--<ffimage:CachedImage
                                                          Aspect="AspectFill"
                                                          CacheType="Memory"
                                                          Grid.Column="0"
@@ -61,9 +62,13 @@
                                                             CachingEnabled="True"/>
                                         </ffimage:CachedImage.Source>
 
-                                    </ffimage:CachedImage>
+                                    </ffimage:CachedImage>-->
 
-                                    <Grid Grid.Column="1">
+                                    <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                           Aspect="AspectFill"
+                                           Grid.Row="0"/>
+
+                                    <Grid Grid.Row="1">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
@@ -73,18 +78,26 @@
                                             <Label Text="{Binding title}" Grid.Row="0" FontSize="20" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
                                             <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
                                         </StackLayout>
-                                        <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}" Grid.Row="1" FontSize="14" LineBreakMode="WordWrap" TextColor="#A8A391" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Margin="5"/>
-                                        <Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>
+                                        
+                                        <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}"
+                                               Grid.Row="1"
+                                               FontSize="14" 
+                                               LineBreakMode="WordWrap" 
+                                               TextColor="#A8A391" 
+                                               VerticalOptions="StartAndExpand" 
+                                               HorizontalOptions="StartAndExpand" 
+                                               Margin="5"/>
+                                        <!--<Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>-->
                                     </Grid>
 
 
                                 </Grid>
-                            </Frame>
+                            
 
-                        </custom:MyViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </custom:MyListView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </Grid>
 
     </ContentPage.Content>

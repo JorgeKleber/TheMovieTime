@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TheMovieTime.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware, IDestructible
+    public class ViewModelBase : BindableBase, IDestructible
     {
         protected INavigationService NavigationService { get; private set; }
 

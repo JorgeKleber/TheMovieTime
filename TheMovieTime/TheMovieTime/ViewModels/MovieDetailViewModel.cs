@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace TheMovieTime.ViewModels
 {
-    public class MovieDetailViewModel : ViewModelBase
+    public class MovieDetailViewModel : BindableBase, INavigatedAware
     {
         private Movie itemResult;
 
@@ -32,18 +32,17 @@ namespace TheMovieTime.ViewModels
         public DateTime Release_date { get => release_date; set { release_date = value; RaisePropertyChanged("Release_date"); } }
 
         public MovieDetailViewModel(INavigationService navigationService) 
-            : base(navigationService)
         {
-            Title = "Detalhes";
+            //Title = "Detalhes";
             this.navigationService = navigationService;
         }
 
-        public override void OnNavigatedFrom(NavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            
+            //throw new NotImplementedException();
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters) 
+        public void OnNavigatedTo(INavigationParameters parameters)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -54,16 +53,11 @@ namespace TheMovieTime.ViewModels
                     Poster_path = this.itemResult.poster_path;
                     Backdrop_path = this.itemResult.backdrop_path;
                     Overview = this.itemResult.overview;
-                    Release_date = DateTime.Parse( this.itemResult.release_date);
+                    Release_date = DateTime.Parse(this.itemResult.release_date);
                     Title1 = this.itemResult.title;
                     Genre_ids = this.itemResult.genres;
                 }
             });
-        }
-
-        private void LoadData()
-        {
-
         }
     }
 }
