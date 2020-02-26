@@ -12,165 +12,185 @@ using System.Text;
 using TheMovieTime.Controller.Service;
 using TheMovieTime.Controller.Util;
 using TheMovieTime.Model;
+using Xamarin.Forms;
 
 namespace TheMovieTime.ViewModels
 {
-    public class MainPageViewModel : BindableBase, INavigatedAware
-    {
-        private ObservableCollection<Movie> results;
-        private Movie itemSelecionado;
-        private List<Movie> resultsAux;
-        private string searchText;
-        private bool isRefresing;
-        bool isLoading;
-        bool isSearch;
-        int count = 1;
-        public INavigationService navigationService { get; set; }
+	public class MainPageViewModel : BindableBase, INavigatedAware
+	{
+		private ObservableCollection<Movie> results;
+		private ObservableCollection<Movie> carouselList;
+		private Movie itemSelecionado;
+		private List<Movie> resultsAux;
+		private string searchText;
+		private bool isRefresing;
+		bool isLoading;
+		bool isSearch;
+		int count = 1;
+		public INavigationService navigationService { get; set; }
 
 
-        public DelegateCommand TesteCommand { get; set; }
-        public DelegateCommand SearchCommand { get; set; }
-        public DelegateCommand RefreshCommand { get; set; }
-        public DelegateCommand<string> TextChanged { get; set; }
-        public DelegateCommand TappedCommand { get; set; }
-        public DelegateCommand<Movie> InfiniteCommand { get; set; }
+		public DelegateCommand TesteCommand { get; set; }
+		public DelegateCommand SearchCommand { get; set; }
+		public DelegateCommand RefreshCommand { get; set; }
+		public DelegateCommand<string> TextChanged { get; set; }
+		public DelegateCommand TappedCommand { get; set; }
+		public DelegateCommand<Movie> InfiniteCommand { get; set; }
 
-        public ObservableCollection<Movie> Results { get => results; set { results = value; RaisePropertyChanged("Results"); } }
-        public string SearchText { get => searchText; set { searchText = value; RaisePropertyChanged("SearchText"); } }
-        public bool IsRefresing { get => isRefresing; set { isRefresing = value; RaisePropertyChanged("IsRefresing"); } }
-        public Movie ItemSelecionado { get => itemSelecionado; set { itemSelecionado = value; RaisePropertyChanged("ItemSelecionado"); } }
+		public ObservableCollection<Movie> Results { get => results; set { results = value; RaisePropertyChanged( "Results" ); } }
+		public ObservableCollection<Movie> CarouselList { get => carouselList; set { carouselList = value; RaisePropertyChanged( "CarouselList" ); } }
 
-        public MainPageViewModel(INavigationService navigationService)
-        {
-            //Title = "Movie Time!";
+		public string SearchText { get => searchText; set { searchText = value; RaisePropertyChanged( "SearchText" ); } }
+		public bool IsRefresing { get => isRefresing; set { isRefresing = value; RaisePropertyChanged( "IsRefresing" ); } }
+		public Movie ItemSelecionado { get => itemSelecionado; set { itemSelecionado = value; RaisePropertyChanged( "ItemSelecionado" ); } }
 
-            this.navigationService = navigationService;
-            this.resultsAux = new List<Movie>();
+		public MainPageViewModel( INavigationService navigationService )
+		{
+			//Title = "Movie Time!";
 
-            TappedCommand = new DelegateCommand(ItemTapped_Event);
-            InfiniteCommand = new DelegateCommand<Movie>(Infinite_Event);
-            RefreshCommand = new DelegateCommand(Refresh_Event);
-            TextChanged = new DelegateCommand<string>(TextChanged_Event);
-        }
+			this.navigationService = navigationService;
+			this.resultsAux = new List<Movie>();
 
-        private void Refresh_Event()
-        {
-            LoadList();
+			TappedCommand = new DelegateCommand( ItemTapped_Event );
+			InfiniteCommand = new DelegateCommand<Movie>( Infinite_Event );
+			RefreshCommand = new DelegateCommand( Refresh_Event );
+			TextChanged = new DelegateCommand<string>( TextChanged_Event );
+		}
 
-            IsRefresing = false;
-        }
+		private void Refresh_Event()
+		{
+			LoadList();
 
-        private void TextChanged_Event(string obj)
-        {
-            isSearch = true;
+			IsRefresing = false;
+		}
 
-            var query = resultsAux.Where(r => r.title.ToUpper().Contains(SearchText.ToUpper())).ToList();
+		private void TextChanged_Event( string obj )
+		{
+			isSearch = true;
 
-            ObservableCollection<Movie> resultQuery = new ObservableCollection<Movie>();
+			var query = resultsAux.Where(r => r.title.ToUpper().Contains(SearchText.ToUpper())).ToList();
 
-            foreach (var item in query)
-            {
-                resultQuery.Add(item);
-            }
+			ObservableCollection<Movie> resultQuery = new ObservableCollection<Movie>();
 
-            Results = resultQuery;
+			foreach ( var item in query )
+			{
+				resultQuery.Add( item );
+			}
 
-            if (SearchText.Length == 0)
-            {
-                Results = new ObservableCollection<Movie>();
+			Results = resultQuery;
 
-                foreach (var item in resultsAux)
-                {
-                    Results.Add(item);
-                }
+			if ( SearchText.Length == 0 )
+			{
+				Results = new ObservableCollection<Movie>();
 
-                isSearch = false;
-            }
-        }
+				foreach ( var item in resultsAux )
+				{
+					Results.Add( item );
+				}
 
-        private void Infinite_Event(Movie obj)
-        {
-            if (isLoading || Results.Count == 0)
+				isSearch = false;
+			}
+		}
 
-                return;
+		private void Infinite_Event( Movie obj )
+		{
+			if ( isLoading || Results.Count == 0 )
 
-            if (isSearch == false && obj == Results[Results.Count - 1])
-            {
-                ReloadList();
-            }
-        }
+				return;
 
-        private async void ReloadList()
-        {
-            if (CrossConnectivity.Current.IsConnected)
-            {
-                isLoading = true;
+			if ( isSearch == false && obj == Results[Results.Count - 1] )
+			{
+				ReloadList();
+			}
+		}
 
-                ++count;
+		private async void ReloadList()
+		{
+			if ( CrossConnectivity.Current.IsConnected )
+			{
+				isLoading = true;
 
-                var newItens = await GlobalValue.serviceRequest.LoadData(count);
+				++count;
 
-                foreach (var item in newItens)
-                {
-                    Results.Add(item);
-                }
+				var newItens = await GlobalValue.serviceRequest.LoadData(count);
 
-                resultsAux = Results.ToList();
+				foreach ( var item in newItens )
+				{
+					Results.Add( item );
+				}
 
-                isLoading = false;
-            }
-            else
-            {
-                await App.Current.MainPage.DisplayAlert("The Movie Time - Alert", "You offline! :(", "Ok");
-            }
-        }
+				resultsAux = Results.ToList();
 
-        private async void LoadList()
-        {
-            if (CrossConnectivity.Current.IsConnected)
-            {
-                try
-                {
-                    count = 1;
+				isLoading = false;
+			}
+			else
+			{
+				await App.Current.MainPage.DisplayAlert( "The Movie Time - Alert", "You offline! :(", "Ok" );
+			}
+		}
 
-                    Results = await GlobalValue.serviceRequest.LoadData(1);
+		private async void LoadList()
+		{
+			if ( CrossConnectivity.Current.IsConnected )
+			{
+				try
+				{
+					count = 1;
 
-                    resultsAux = Results.ToList();
+					Device.BeginInvokeOnMainThread( async () =>
+					 {
+						 var collection = await GlobalValue.serviceRequest.LoadData( 1 );
 
-                }
-                catch (Exception)
-                {
-                    var erro = await GlobalValue.serviceRequest.GetFailRequest(count);
+						 var colesao = collection.Take<Movie>(3);
 
-                    await App.Current.MainPage.DisplayAlert("Atenção", erro.status_message, "Ok");
-                } 
-            }
-            else
-            {
-                await App.Current.MainPage.DisplayAlert("The Movie Time - Alert","You offline! :(", "Ok");
-            }
-        }
+						 CarouselList = new ObservableCollection<Movie>();
 
-        private async void ItemTapped_Event()
-        {
-            var parameter = new NavigationParameters();
+						 foreach ( var item in colesao )
+						 {
+							 CarouselList.Add( item );
+						 }
 
-            parameter.Add("Result", ItemSelecionado);
+						 Results = collection;//await GlobalValue.serviceRequest.LoadData( 1 );
 
-            await this.navigationService.NavigateAsync("MovieDetail", parameter);
-        }
+						resultsAux = Results.ToList();
+					 } );
 
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-            //throw new NotImplementedException();
-        }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
-        {
-            if (Results == null)
-            {
-                LoadList();
-            }
-        }
-    }
+
+				}
+				catch ( Exception )
+				{
+					var erro = await GlobalValue.serviceRequest.GetFailRequest(count);
+
+					await App.Current.MainPage.DisplayAlert( "Atenção", erro.status_message, "Ok" );
+				}
+			}
+			else
+			{
+				await App.Current.MainPage.DisplayAlert( "The Movie Time - Alert", "You offline! :(", "Ok" );
+			}
+		}
+
+		private async void ItemTapped_Event()
+		{
+			var parameter = new NavigationParameters();
+
+			parameter.Add( "Result", ItemSelecionado );
+
+			await this.navigationService.NavigateAsync( "MovieDetail", parameter );
+		}
+
+		public void OnNavigatedFrom( INavigationParameters parameters )
+		{
+			//throw new NotImplementedException();
+		}
+
+		public void OnNavigatedTo( INavigationParameters parameters )
+		{
+			if ( Results == null )
+			{
+				LoadList();
+			}
+		}
+	}
 }

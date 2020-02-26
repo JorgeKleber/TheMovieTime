@@ -9,44 +9,75 @@
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              Title="{Binding Title}">
 
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+  <ContentPage.Content>
+    <ScrollView>
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="50"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <SearchBar Text="{Binding SearchText}" 
+        <!--<SearchBar Text="{Binding SearchText}" 
                        Placeholder="Informe o nome do filme" 
                        Grid.Row="0">
                 <SearchBar.Behaviors>
                     <b:EventToCommandBehavior EventName="TextChanged" Command="{Binding TextChanged}"/>
                 </SearchBar.Behaviors>
-            </SearchBar>
+            </SearchBar>-->
 
-            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefresing}"
+        <Label Text="The Movie Time" FontSize="Medium" Grid.Row="0" HorizontalOptions="Center" Margin="10"/>
+
+
+
+
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefresing}"
                          Command="{Binding RefreshCommand}">
 
-                <CollectionView ItemsSource="{Binding Results}"
+
+          <CollectionView ItemsSource="{Binding Results}"
                                 SelectionMode="Single"
                                 SelectionChangedCommand="{Binding TappedCommand}"
                                 SelectedItem="{Binding ItemSelecionado}">
 
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical" Span="2"/>
-                    </CollectionView.ItemsLayout>
+            <CollectionView.Header>
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+              
+                <CarouselView 
+                    ItemsSource="{Binding CarouselList}" 
+                    HorizontalOptions="Center" 
+                    VerticalOptions="CenterAndExpand"
+                  HeightRequest="200"
+                    Margin="10">
 
-                            
-                                <Grid Padding="10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                  <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                      <Grid>
+                        <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                           Aspect="AspectFill"/>
+                      </Grid>
+                    </DataTemplate>
+                  </CarouselView.ItemTemplate>
 
-                                    <!--<ffimage:CachedImage
+
+                </CarouselView>
+
+            </CollectionView.Header>
+
+            <CollectionView.ItemsLayout>
+              <GridItemsLayout Orientation="Vertical" Span="2"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+
+
+                <Grid Padding="10">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                  </Grid.RowDefinitions>
+
+                  <!--<ffimage:CachedImage
                                                          Aspect="AspectFill"
                                                          CacheType="Memory"
                                                          Grid.Column="0"
@@ -64,22 +95,22 @@
 
                                     </ffimage:CachedImage>-->
 
-                                    <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                  <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
                                            Aspect="AspectFill"
                                            Grid.Row="0"/>
 
-                                    <Grid Grid.Row="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <StackLayout>
-                                            <Label Text="{Binding title}" Grid.Row="0" FontSize="20" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
-                                            <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
-                                        </StackLayout>
-                                        
-                                        <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}"
+                  <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="Auto"/>
+                      <RowDefinition Height="*"/>
+                      <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackLayout>
+                      <Label Text="{Binding title}" Grid.Row="0" FontSize="20" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
+                      <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
+                    </StackLayout>
+
+                    <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}"
                                                Grid.Row="1"
                                                FontSize="14" 
                                                LineBreakMode="WordWrap" 
@@ -87,19 +118,27 @@
                                                VerticalOptions="StartAndExpand" 
                                                HorizontalOptions="StartAndExpand" 
                                                Margin="5"/>
-                                        <!--<Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>-->
-                                    </Grid>
+                    <!--<Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>-->
+                  </Grid>
 
 
-                                </Grid>
-                            
+                </Grid>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
-        </Grid>
 
-    </ContentPage.Content>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+              <Grid>
+
+              </Grid>
+            </CollectionView.Footer>
+
+          </CollectionView>
+        </RefreshView>
+
+      </Grid>
+    </ScrollView>
+  </ContentPage.Content>
 
 </ContentPage>
