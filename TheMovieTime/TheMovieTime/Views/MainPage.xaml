@@ -7,6 +7,7 @@
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              NavigationPage.HasNavigationBar="False"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             x:Name="myPage"
              Title="{Binding Title}">
 
   <ContentPage.Content>
@@ -42,20 +43,22 @@
             <CollectionView.Header>
 
               
-                <CarouselView 
-                    ItemsSource="{Binding CarouselList}" 
-                    HorizontalOptions="Center" 
-                    VerticalOptions="CenterAndExpand"
-                  HeightRequest="200"
-                    Margin="10">
+                <CarouselView ItemsSource="{Binding Source={x:Reference myPage}, Path=BindingContext.CarouselList}" 
+                              HorizontalOptions="Center" 
+                              VerticalOptions="CenterAndExpand"
+                              HeightRequest="200"
+                              Margin="10">
 
                   <CarouselView.ItemTemplate>
                     <DataTemplate>
-                      <Grid>
-                        <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+
+                    <Grid>
+                      <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
                                            Aspect="AspectFill"/>
-                      </Grid>
-                    </DataTemplate>
+                      <Label Text="{Binding title}" FontSize="20" TextColor="White" VerticalOptions="End" Margin="5,0,5,20"/>
+                    </Grid>
+
+                  </DataTemplate>
                   </CarouselView.ItemTemplate>
 
 
@@ -64,7 +67,7 @@
             </CollectionView.Header>
 
             <CollectionView.ItemsLayout>
-              <GridItemsLayout Orientation="Vertical" Span="2"/>
+              <GridItemsLayout Orientation="Vertical" Span="3"/>
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
@@ -106,13 +109,13 @@
                       <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <StackLayout>
-                      <Label Text="{Binding title}" Grid.Row="0" FontSize="20" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
+                      <Label Text="{Binding title}" Grid.Row="0" FontSize="Small" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
                       <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
                     </StackLayout>
 
                     <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}"
                                                Grid.Row="1"
-                                               FontSize="14" 
+                                               FontSize="Micro" 
                                                LineBreakMode="WordWrap" 
                                                TextColor="#A8A391" 
                                                VerticalOptions="StartAndExpand" 
