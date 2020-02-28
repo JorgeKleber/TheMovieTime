@@ -1,68 +1,128 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TheMovieTime.Views.MainPage"
-             xmlns:custom="clr-namespace:TheMovieTime.Custom"
-             xmlns:convert="clr-namespace:TheMovieTime.Converters"
+             xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:custom="clr-namespace:TheMovieTime.Custom"
+             x:Class="TheMovieTime.Views.MainPage"
+             xmlns:prism="http://prismlibrary.com"
              NavigationPage.HasNavigationBar="False"
-             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             
              x:Name="myPage"
              Title="{Binding Title}">
 
+  <ContentPage.Resources>
+    <Style TargetType="Grid">
+      <Setter Property="VisualStateManager.VisualStateGroups">
+        <VisualStateGroupList>
+          <VisualStateGroup x:Name="CommonStates">
+
+            <VisualState x:Name="Normal" />
+            <VisualState x:Name="Selected">
+              <VisualState.Setters>
+                <Setter Property="BackgroundColor" Value="Transparent" />
+              </VisualState.Setters>
+            </VisualState>
+
+          </VisualStateGroup>
+        </VisualStateGroupList>
+      </Setter>
+    </Style>
+  </ContentPage.Resources>
+
   <ContentPage.Content>
+
     <ScrollView>
+
       <Grid>
+
+
         <Grid.RowDefinitions>
           <RowDefinition Height="50"/>
+          <RowDefinition Height="Auto"/>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--<SearchBar Text="{Binding SearchText}" 
-                       Placeholder="Informe o nome do filme" 
-                       Grid.Row="0">
-                <SearchBar.Behaviors>
-                    <b:EventToCommandBehavior EventName="TextChanged" Command="{Binding TextChanged}"/>
-                </SearchBar.Behaviors>
-            </SearchBar>-->
-
         <Label Text="The Movie Time" FontSize="Medium" Grid.Row="0" HorizontalOptions="Center" Margin="10"/>
 
+        <custom:MyEntry Text="{Binding SearchText}" 
+                       Placeholder="Informe o nome do filme" 
+                       Margin="10,0"
+                       HeightRequest="35"
+                       Grid.Row="1">
+          
+          <custom:MyEntry.Behaviors>
+            <prism:EventToCommandBehavior EventName="TextChanged" Command="{Binding TextChanged}"/>
+          </custom:MyEntry.Behaviors>
+          
+        </custom:MyEntry>
 
 
 
-        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefresing}"
+
+        <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefresing}"
                          Command="{Binding RefreshCommand}">
 
 
           <CollectionView ItemsSource="{Binding Results}"
-                                SelectionMode="Single"
-                                SelectionChangedCommand="{Binding TappedCommand}"
-                                SelectedItem="{Binding ItemSelecionado}">
+                          SelectionMode="Single"
+                          RemainingItemsThreshold="20"
+                          RemainingItemsThresholdReachedCommand="{Binding InfiniteCommand}"
+                          SelectionChangedCommand="{Binding TappedCommand}"
+                          SelectedItem="{Binding ItemSelecionado}">
 
             <CollectionView.Header>
 
-              
-                <CarouselView ItemsSource="{Binding Source={x:Reference myPage}, Path=BindingContext.CarouselList}" 
+              <CarouselView ItemsSource="{Binding Source={x:Reference myPage}, Path=BindingContext.CarouselList}" 
                               HorizontalOptions="Center" 
                               VerticalOptions="CenterAndExpand"
                               HeightRequest="200"
                               Margin="10">
 
-                  <CarouselView.ItemTemplate>
-                    <DataTemplate>
+                <CarouselView.ItemTemplate>
+                  <DataTemplate>
 
                     <Grid>
-                      <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                           Aspect="AspectFill"/>
-                      <Label Text="{Binding title}" FontSize="20" TextColor="White" VerticalOptions="End" Margin="5,0,5,20"/>
+                      <yummy:PancakeView CornerRadius="15" 
+                                         IsClippedToBounds="true" 
+                                         Elevation="10"
+                                         HasShadow="True"
+                                         HorizontalOptions="FillAndExpand" 
+                                         HeightRequest="150" Margin="10">
+
+                        <!--<Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" Aspect="AspectFill"/>-->
+
+                        <ffimage:CachedImage Aspect="AspectFill"
+                                              CacheType="Memory"
+                                              Grid.Column="0"
+                                              RetryCount="3"
+                                              LoadingPlaceholder="ic_default.png"
+                                              ErrorPlaceholder="ic_default.png"
+                                              DownsampleHeight="0"
+                                              Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                              DownsampleToViewSize="True"
+                                              FadeAnimationEnabled="True">
+
+                          <!--<ffimage:CachedImage.Source>
+                                            <UriImageSource Uri="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                                            CacheValidity="14"
+                                                            CachingEnabled="True"/>
+                                        </ffimage:CachedImage.Source>-->
+
+                        </ffimage:CachedImage>
+
+
+                      </yummy:PancakeView>
+                      
+                      <Label Text="{Binding title}" Grid.Row="0" FontSize="Medium" TextColor="White" VerticalOptions="EndAndExpand" Margin="25,0,5,25"/>
+                      
                     </Grid>
 
                   </DataTemplate>
-                  </CarouselView.ItemTemplate>
+                </CarouselView.ItemTemplate>
 
 
-                </CarouselView>
+              </CarouselView>
 
             </CollectionView.Header>
 
@@ -71,71 +131,67 @@
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
+
               <DataTemplate>
 
-
                 <Grid Padding="10">
+
                   <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                   </Grid.RowDefinitions>
 
-                  <!--<ffimage:CachedImage
-                                                         Aspect="AspectFill"
-                                                         CacheType="Memory"
-                                                         Grid.Column="0"
-                                                         RetryCount="3"
-                                                         LoadingPlaceholder="ic_default.png"
-                                                         ErrorPlaceholder="ic_default.png"
-                                                         DownsampleHeight="0"
-                                                         DownsampleToViewSize="True"
-                                                         FadeAnimationEnabled="True">
-                                        <ffimage:CachedImage.Source>
+                  <yummy:PancakeView CornerRadius="5" 
+                                    Grid.Row="0"
+                                    Elevation="10"
+                                    HasShadow="True"
+                                    IsClippedToBounds="true" 
+                                    HorizontalOptions="FillAndExpand" 
+                                    HeightRequest="150">
+
+                    <!--<Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                           Aspect="AspectFill"/>-->
+
+                    <ffimage:CachedImage Aspect="AspectFill"
+                                         CacheType="Memory"
+                                         Grid.Column="0"
+                                         RetryCount="3"
+                                         CacheDuration="1"
+                                         LoadingPlaceholder="ic_default.png"
+                                         ErrorPlaceholder="ic_default.png"
+                                         Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                         DownsampleToViewSize="True"
+                                         FadeAnimationEnabled="True">
+
+                      <!--<ffimage:CachedImage.Source>
                                             <UriImageSource Uri="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
                                                             CacheValidity="14"
                                                             CachingEnabled="True"/>
-                                        </ffimage:CachedImage.Source>
+                                        </ffimage:CachedImage.Source>-->
 
-                                    </ffimage:CachedImage>-->
+                    </ffimage:CachedImage>
 
-                  <Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                           Aspect="AspectFill"
-                                           Grid.Row="0"/>
+                  </yummy:PancakeView>
 
                   <Grid Grid.Row="1">
+
                     <Grid.RowDefinitions>
                       <RowDefinition Height="Auto"/>
                       <RowDefinition Height="*"/>
                       <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
+
                     <StackLayout>
                       <Label Text="{Binding title}" Grid.Row="0" FontSize="Small" TextColor="#756323" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>
-                      <!--<Label Text="{Binding original_title, StringFormat='({0})'}" Grid.Row="0" FontSize="18" TextColor="#b19635" VerticalOptions="CenterAndExpand" Margin="5,0,5,0"/>-->
                     </StackLayout>
 
-                    <Label Text="{Binding release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}"
-                                               Grid.Row="1"
-                                               FontSize="Micro" 
-                                               LineBreakMode="WordWrap" 
-                                               TextColor="#A8A391" 
-                                               VerticalOptions="StartAndExpand" 
-                                               HorizontalOptions="StartAndExpand" 
-                                               Margin="5"/>
-                    <!--<Label Text="{Binding genres}" Grid.Row="2" FontSize="14" LineBreakMode="TailTruncation" TextColor="#756323" VerticalOptions="StartAndExpand" HorizontalOptions="Start" Margin="5,0,5,0"/>-->
                   </Grid>
-
 
                 </Grid>
 
 
               </DataTemplate>
             </CollectionView.ItemTemplate>
-
-            <CollectionView.Footer>
-              <Grid>
-
-              </Grid>
-            </CollectionView.Footer>
 
           </CollectionView>
         </RefreshView>

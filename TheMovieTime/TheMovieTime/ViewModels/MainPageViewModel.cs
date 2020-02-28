@@ -1,15 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Plugin.Connectivity;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using TheMovieTime.Controller.Service;
 using TheMovieTime.Controller.Util;
 using TheMovieTime.Model;
 using Xamarin.Forms;
@@ -98,7 +94,7 @@ namespace TheMovieTime.ViewModels
 
 				return;
 
-			if ( isSearch == false && obj == Results[Results.Count - 1] )
+			if ( isSearch == false)// && obj == Results[Results.Count - 1] )
 			{
 				ReloadList();
 			}
@@ -173,7 +169,7 @@ namespace TheMovieTime.ViewModels
 
 		private async void ItemTapped_Event()
 		{
-			var parameter = new NavigationParameters();
+			var parameter = new NavigationParameters ();
 
 			parameter.Add( "Result", ItemSelecionado );
 

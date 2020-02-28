@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Prism.AppModel;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
@@ -9,7 +10,7 @@ using Xamarin.Forms;
 
 namespace TheMovieTime.ViewModels
 {
-    public class MovieDetailViewModel : BindableBase, INavigatedAware
+    public class MovieDetailViewModel : BindableBase, INavigatedAware, IAutoInitialize
     {
         private Movie itemResult;
 
@@ -44,20 +45,20 @@ namespace TheMovieTime.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                if (parameters.ContainsKey("Result"))
-                {
-                    this.itemResult = (Movie)parameters["Result"];
+            Device.BeginInvokeOnMainThread( () =>
+             {
+                 if ( parameters.ContainsKey( "Result" ) )
+                 {
+                     this.itemResult = (Movie)parameters["Result"];
 
-                    Poster_path = this.itemResult.poster_path;
-                    Backdrop_path = this.itemResult.backdrop_path;
-                    Overview = this.itemResult.overview;
-                    Release_date = DateTime.Parse(this.itemResult.release_date);
-                    Title1 = this.itemResult.title;
-                    Genre_ids = this.itemResult.genres;
-                }
-            });
+                     Poster_path = this.itemResult.poster_path;
+                     Backdrop_path = this.itemResult.backdrop_path;
+                     Overview = this.itemResult.overview;
+                     Release_date = DateTime.Parse( this.itemResult.release_date );
+                     Title1 = this.itemResult.title;
+                     Genre_ids = this.itemResult.genres;
+                 }
+             } );
         }
     }
 }

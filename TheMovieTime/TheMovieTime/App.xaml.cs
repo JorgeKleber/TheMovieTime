@@ -28,6 +28,8 @@ namespace TheMovieTime
             GlobalValue.serviceRequest = new Controller.Service.ServiceRequest();
 
             await NavigationService.NavigateAsync("NavigationPage/MainPage");
+
+            //MainPage = new SharedTransitionNavigationPage(new MainPage());
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
