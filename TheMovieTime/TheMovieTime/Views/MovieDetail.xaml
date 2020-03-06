@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:sharedTransitions="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              NavigationPage.HasNavigationBar="False"
-             x:Class="TheMovieTime.Views.MovieDetail" Title="{Binding Title}">
+             x:Name="detail"
+             x:Class="TheMovieTime.Views.MovieDetail">
 
     <ContentPage.Content>
         <Grid>
@@ -15,14 +17,15 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ffimage:CachedImage Source="{Binding Backdrop_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" 
+            <ffimage:CachedImage Source="{Binding ItemResult.backdrop_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" 
                                  Aspect="AspectFill" Grid.Row="0"/>
 
-            <ffimage:CachedImage Source="{Binding Poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" 
+            <ffimage:CachedImage Source="{Binding ItemResult.poster_path, StringFormat='https://image.tmdb.org/t/p/w200/{0}'}" 
                                  Aspect="AspectFill" 
                                  WidthRequest="100"
                                  HeightRequest="150"
                                  Grid.Column="0"
+                                 sharedTransitions:Transition.Name="MovieSelected" sharedTransitions:Transition.Group="{Binding ItemResult.Id}"
                                  VerticalOptions="End"
                                  HorizontalOptions="Start" 
                                  Margin="25,0,0,0"
@@ -36,15 +39,15 @@
                 </Grid.ColumnDefinitions>
 
                 <StackLayout Orientation="Vertical" Grid.Column="1">
-                    <Label Text="{Binding Title1}" HorizontalTextAlignment="Start" HorizontalOptions="StartAndExpand" FontSize="Large"/>
-                    <Label Text="{Binding Release_date, StringFormat='Estréida: {0:dd/MM/yyyy}'}" TextColor="#b19635" FontSize="Small" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
-                    <Label Text="{Binding Genre_ids}" FontSize="Small" VerticalOptions="EndAndExpand" TextColor="#b19635" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
+                    <Label Text="{Binding ItemResult.title}" HorizontalTextAlignment="Start" HorizontalOptions="StartAndExpand" FontSize="Large"/>
+                    <Label Text="{Binding ItemResult.release_date, StringFormat='Estréida: {0:dd/MM/yyyy}'}" TextColor="#b19635" FontSize="Small" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
+                    <Label Text="{Binding ItemResult.genre_ids}" FontSize="Small" VerticalOptions="EndAndExpand" TextColor="#b19635" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
                 </StackLayout>
             </Grid>
 
             <Grid  Grid.Row="2">
                 <ScrollView>
-                    <Label Text="{Binding Overview}" FontSize="Medium" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
+                    <Label Text="{Binding ItemResult.overview}" FontSize="Medium" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
                 </ScrollView>
             </Grid>
 

@@ -1,12 +1,14 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using SkiaSharp;
+using Xamarin.Forms;
 
 namespace TheMovieTime.Views
 {
-    public partial class MovieDetail : ContentPage
-    {
-        public MovieDetail()
-        {
-            InitializeComponent();
-        }
-    }
+	public partial class MovieDetail : ContentPage
+	{
+		public MovieDetail()
+		{
+			InitializeComponent();
+		}
+	}
 }

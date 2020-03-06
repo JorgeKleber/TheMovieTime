@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:sharedTransitions="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
+              sharedTransitions:SharedTransitionNavigationPage.TransitionSelectedGroup="{Binding IdItemSelecionado }"
              xmlns:custom="clr-namespace:TheMovieTime.Custom"
              x:Class="TheMovieTime.Views.MainPage"
              xmlns:prism="http://prismlibrary.com"
@@ -11,24 +13,23 @@
              x:Name="myPage"
              Title="{Binding Title}">
 
-  <ContentPage.Resources>
-    <Style TargetType="Grid">
-      <Setter Property="VisualStateManager.VisualStateGroups">
-        <VisualStateGroupList>
-          <VisualStateGroup x:Name="CommonStates">
-
-            <VisualState x:Name="Normal" />
-            <VisualState x:Name="Selected">
-              <VisualState.Setters>
-                <Setter Property="BackgroundColor" Value="Transparent" />
-              </VisualState.Setters>
-            </VisualState>
-
-          </VisualStateGroup>
-        </VisualStateGroupList>
-      </Setter>
-    </Style>
-  </ContentPage.Resources>
+  <!--<ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="clear" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>-->
 
   <ContentPage.Content>
 
@@ -64,12 +65,14 @@
                          Command="{Binding RefreshCommand}">
 
 
-          <CollectionView ItemsSource="{Binding Results}"
+          <CollectionView x:Name="MovieGrid"
+                          ItemsSource="{Binding Results}"
                           SelectionMode="Single"
                           RemainingItemsThreshold="20"
                           RemainingItemsThresholdReachedCommand="{Binding InfiniteCommand}"
                           SelectionChangedCommand="{Binding TappedCommand}"
-                          SelectedItem="{Binding ItemSelecionado}">
+                          SelectedItem="{Binding ItemSelecionado, Mode=TwoWay}"
+                          Scrolled="CollectionView_Scrolled">
 
             <CollectionView.Header>
 
@@ -90,24 +93,15 @@
                                          HorizontalOptions="FillAndExpand" 
                                          HeightRequest="150" Margin="10">
 
-                        <!--<Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}" Aspect="AspectFill"/>-->
-
                         <ffimage:CachedImage Aspect="AspectFill"
-                                              CacheType="Memory"
-                                              Grid.Column="0"
-                                              RetryCount="3"
-                                              LoadingPlaceholder="ic_default.png"
-                                              ErrorPlaceholder="ic_default.png"
-                                              DownsampleHeight="0"
-                                              Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                              DownsampleToViewSize="True"
-                                              FadeAnimationEnabled="True">
-
-                          <!--<ffimage:CachedImage.Source>
-                                            <UriImageSource Uri="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                                            CacheValidity="14"
-                                                            CachingEnabled="True"/>
-                                        </ffimage:CachedImage.Source>-->
+                                             CacheType="Memory"
+                                             Grid.Column="0"
+                                             RetryCount="3"
+                                             CacheDuration="30"
+                                             LoadingPlaceholder="ic_default.png"
+                                             ErrorPlaceholder="ic_default.png"
+                                             Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
+                                             DownsampleToViewSize="True">
 
                         </ffimage:CachedImage>
 
@@ -134,7 +128,7 @@
 
               <DataTemplate>
 
-                <Grid Padding="10">
+                <Grid Padding="5">
 
                   <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -149,25 +143,14 @@
                                     HorizontalOptions="FillAndExpand" 
                                     HeightRequest="150">
 
-                    <!--<Image Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                           Aspect="AspectFill"/>-->
-
+                    
                     <ffimage:CachedImage Aspect="AspectFill"
-                                         CacheType="Memory"
+                                         CacheType="All"
                                          Grid.Column="0"
-                                         RetryCount="3"
-                                         CacheDuration="1"
                                          LoadingPlaceholder="ic_default.png"
                                          ErrorPlaceholder="ic_default.png"
-                                         Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                         DownsampleToViewSize="True"
-                                         FadeAnimationEnabled="True">
-
-                      <!--<ffimage:CachedImage.Source>
-                                            <UriImageSource Uri="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w500/{0}'}"
-                                                            CacheValidity="14"
-                                                            CachingEnabled="True"/>
-                                        </ffimage:CachedImage.Source>-->
+                                         Source="{Binding poster_path, StringFormat='https://image.tmdb.org/t/p/w200/{0}', Mode=Default}"
+                                         DownsampleToViewSize="True">
 
                     </ffimage:CachedImage>
 

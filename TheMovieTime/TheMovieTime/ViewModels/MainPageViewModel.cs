@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using TheMovieTime.Controller.Util;
 using TheMovieTime.Model;
+using TheMovieTime.Views;
 using Xamarin.Forms;
 
 namespace TheMovieTime.ViewModels
@@ -17,6 +18,7 @@ namespace TheMovieTime.ViewModels
 		private ObservableCollection<Movie> results;
 		private ObservableCollection<Movie> carouselList;
 		private Movie itemSelecionado;
+		private int idItemSelecionado;
 		private List<Movie> resultsAux;
 		private string searchText;
 		private bool isRefresing;
@@ -39,6 +41,7 @@ namespace TheMovieTime.ViewModels
 		public string SearchText { get => searchText; set { searchText = value; RaisePropertyChanged( "SearchText" ); } }
 		public bool IsRefresing { get => isRefresing; set { isRefresing = value; RaisePropertyChanged( "IsRefresing" ); } }
 		public Movie ItemSelecionado { get => itemSelecionado; set { itemSelecionado = value; RaisePropertyChanged( "ItemSelecionado" ); } }
+		public int IdItemSelecionado { get => idItemSelecionado; set { idItemSelecionado = value; RaisePropertyChanged( "IdItemSelecionado" ); } }
 
 		public MainPageViewModel( INavigationService navigationService )
 		{
@@ -94,7 +97,7 @@ namespace TheMovieTime.ViewModels
 
 				return;
 
-			if ( isSearch == false)// && obj == Results[Results.Count - 1] )
+			if ( isSearch == false )// && obj == Results[Results.Count - 1] )
 			{
 				ReloadList();
 			}
@@ -143,12 +146,15 @@ namespace TheMovieTime.ViewModels
 
 						 foreach ( var item in colesao )
 						 {
+
+
+
 							 CarouselList.Add( item );
 						 }
 
 						 Results = collection;//await GlobalValue.serviceRequest.LoadData( 1 );
 
-						resultsAux = Results.ToList();
+						 resultsAux = Results.ToList();
 					 } );
 
 
@@ -169,16 +175,26 @@ namespace TheMovieTime.ViewModels
 
 		private async void ItemTapped_Event()
 		{
-			var parameter = new NavigationParameters ();
+			//var parameter = new NavigationParameters ();
 
-			parameter.Add( "Result", ItemSelecionado );
+			//parameter.Add( "Result", ItemSelecionado );
 
-			await this.navigationService.NavigateAsync( "MovieDetail", parameter );
+			//await this.navigationService.NavigateAsync( "MovieDetail", parameter );
+
+			if ( ItemSelecionado != null )
+			{
+				IdItemSelecionado = ItemSelecionado.id;
+
+				var navParam = new NavigationParameters {{nameof(ItemSelecionado), ItemSelecionado}};
+				await navigationService.NavigateAsync( $"{nameof( MovieDetail )}", navParam );
+
+				ItemSelecionado = null; 
+			}
 		}
 
 		public void OnNavigatedFrom( INavigationParameters parameters )
 		{
-			//throw new NotImplementedException();
+
 		}
 
 		public void OnNavigatedTo( INavigationParameters parameters )

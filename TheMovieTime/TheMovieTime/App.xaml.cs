@@ -6,6 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Unity;
 using TheMovieTime.Controller.Util;
+using Plugin.SharedTransitions;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace TheMovieTime
@@ -27,14 +28,15 @@ namespace TheMovieTime
 
             GlobalValue.serviceRequest = new Controller.Service.ServiceRequest();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            //await NavigationService.NavigateAsync("NavigationPage/MainPage");
 
-            //MainPage = new SharedTransitionNavigationPage(new MainPage());
+            await NavigationService.NavigateAsync($"{nameof(SharedTransitionNavigationPage)}/{nameof(MainPage)}");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<NavigationPage>();
+            //containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<SharedTransitionNavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<MovieDetail>();
         }
