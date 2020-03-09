@@ -50,6 +50,9 @@ namespace TheMovieTime.Controller.Service
 
                 foreach (var item in rootObject.results)
                 {
+
+                    DateTime date = DateTime.Parse(item.release_date.Replace('-','/'));
+
                     Movie movie = new Movie()
                     {
                         backdrop_path = item.backdrop_path,
@@ -58,7 +61,7 @@ namespace TheMovieTime.Controller.Service
                         original_title = item.original_title,
                         overview = item.overview,
                         poster_path = item.poster_path,
-                        release_date = item.release_date,
+                        release_date = date.ToString().Substring(0,10),
                         title = item.title
                     };
 

@@ -11,7 +11,7 @@
              NavigationPage.HasNavigationBar="False"
              
              x:Name="myPage"
-             Title="{Binding Title}">
+             Title="Teste">
 
   <!--<ContentPage.Resources>
         <Style TargetType="Grid">

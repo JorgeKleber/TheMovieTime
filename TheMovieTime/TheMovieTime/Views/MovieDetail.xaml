@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ffimage="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:sharedTransitions="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
+             xmlns:custom="clr-namespace:TheMovieTime.Custom"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              NavigationPage.HasNavigationBar="False"
@@ -28,7 +29,7 @@
                                  sharedTransitions:Transition.Name="MovieSelected" sharedTransitions:Transition.Group="{Binding ItemResult.Id}"
                                  VerticalOptions="End"
                                  HorizontalOptions="Start" 
-                                 Margin="25,0,0,0"
+                                 Margin="10,0,0,0"
                                  TranslationY="100"/>
 
             <Grid  Grid.Row="1">
@@ -40,14 +41,14 @@
 
                 <StackLayout Orientation="Vertical" Grid.Column="1">
                     <Label Text="{Binding ItemResult.title}" HorizontalTextAlignment="Start" HorizontalOptions="StartAndExpand" FontSize="Large"/>
-                    <Label Text="{Binding ItemResult.release_date, StringFormat='Estréida: {0:dd/MM/yyyy}'}" TextColor="#b19635" FontSize="Small" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
+                    <Label Text="{Binding ItemResult.release_date, StringFormat='Estréia: {0:dd/MM/yyyy}'}" TextColor="#b19635" FontSize="Small" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
                     <Label Text="{Binding ItemResult.genre_ids}" FontSize="Small" VerticalOptions="EndAndExpand" TextColor="#b19635" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Margin="0,0,0,0"/>
                 </StackLayout>
             </Grid>
 
             <Grid  Grid.Row="2">
                 <ScrollView>
-                    <Label Text="{Binding ItemResult.overview}" FontSize="Medium" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
+                    <custom:MyLabel Text="{Binding ItemResult.overview}" FontSize="Small" VerticalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="10"/>
                 </ScrollView>
             </Grid>
 
