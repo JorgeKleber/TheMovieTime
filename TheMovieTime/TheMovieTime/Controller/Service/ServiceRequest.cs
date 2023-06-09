@@ -15,7 +15,7 @@ namespace TheMovieTime.Controller.Service
     {
         private static string _DefaultUrl = "https://api.themoviedb.org/3/movie/upcoming?api_key=";
         private static string _DefaultGenreUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=";
-        private static string _Api_Key = "1f54bd990f1cdfb230adb312546d765d";
+        private static string _Api_Key = "449999e6d231bceb423dc651afa244f9";
 
         private string language = "&language=pt-BR";
         private string numberPage = "&page=";
