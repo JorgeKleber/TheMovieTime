@@ -1,6 +1,8 @@
 # TheMovieTime
 An app that show you the upcoming movies!
 
+![](https://github.com/JorgeKleber/TheMovieTime/blob/master/screenshot_app.png)
+
 * Highly recommended to delete the bin and obj folders of each project.
 
 Libraries included in this project:
